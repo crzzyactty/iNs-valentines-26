@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🩵 For Sam 😝</title>
+<link rel="icon" type="image/png" href="favicon.ico">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #ff6fae, #ff3f6c);
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: white;
+  text-align: center;
+}
+
+/* ================= PASSWORD SCREEN ================= */
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ff5fa2, #ff3f6c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.9s ease;
+}
+
+.lock-screen.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lock-box {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(14px);
+  padding: 30px 25px;
+  border-radius: 22px;
+  width: 90%;
+  max-width: 340px;
+  box-shadow: 0 0 35px rgba(0,0,0,0.35);
+}
+
+.lock-title {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.lock-sub {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+.lock-countdown {
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+  color: #e9f9ff;
+  text-shadow: 0 0 10px rgba(255,255,255,0.4);
+}
+
+.lock-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.lock-error {
+  font-size: 0.9rem;
+  margin-top: 8px;
+  color: #ffe1eb;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.3s ease;
+}
+
+.lock-error.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ================= FLOATING HEARTS ================= */
+.heart {
+  position: fixed;
+  bottom: -20px;
+  font-size: 20px;
+  animation: floatUp linear infinite;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(-120vh) scale(1.5); opacity: 0; }
+}
+
+/* ================= LAYOUT ================= */
+.container {
+  padding: 40px 15px;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.container.show {
+  display: block;
+  opacity: 1;
+}
+
+.name {
+  font-size: clamp(2.5rem, 6vw, 3.8rem);
+  color: #f55e5e;
+  text-shadow: 0 0 10px #f55e5e, 0 0 25px #f55e5e;
+  margin-bottom: 20px;
+}
+
+/* ================= PHOTO ================= */
+.photo {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 20px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.4);
+  box-shadow: 0 0 20px rgba(255,255,255,0.25);
+  animation: floatPic 3s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes floatPic {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ================= PHOTO MESSAGE ================= */
+.photo-message {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #e9f9ff;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.4s ease;
+}
+
+.photo-message.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ================= CARD ================= */
+.card {
+  background: rgba(255,255,255,0.18);
+  border-radius: 22px;
+  padding: 25px;
+  max-width: 600px;
+  margin: auto;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 35px rgba(0,0,0,0.25);
+}
+
+.letter {
+  font-size: clamp(1rem, 3.5vw, 1.15rem);
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+/* ================= COUNTERS ================= */
+.counter, .countdown {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  color: #e9f9ff;
+  text-shadow: 0 0 10px rgba(255,255,255,0.4);
+}
+
+/* ================= BUTTONS ================= */
+button {
+  background: linear-gradient(45deg, #f55e5e, #fc3939);
+  border: none;
+  border-radius: 35px;
+  padding: 14px 32px;
+  font-size: 1.05rem;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 18px #f55e5e;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 28px #f55e5e;
+}
+
+#secret {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #e9f9ff;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.5s ease;
+}
+
+#secret.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ================= SCRATCH CARD ================= */
+.scratch-container {
+  margin-top: 25px;
+}
+
+.scratch-card {
+  width: 260px;
+  height: 90px;
+  margin: auto;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  cursor: pointer;
+  box-shadow: 0 0 18px #f55e5e;
+}
+
+.scratch-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #ffeff5;
+  background: rgba(255,255,255,0.12);
+  border-radius: 14px;
+  z-index: 1;
+}
+
+.scratch-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, #f55e5e, #fc3939);
+  z-index: 2;
+}
+
+/* ================= MINI GAME ================= */
+.game {
+  margin-top: 25px;
+  padding: 15px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 16px;
+}
+
+.score {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.game-area {
+  position: relative;
+  height: 180px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+.tap-heart {
+  position: absolute;
+  font-size: 26px;
+  cursor: pointer;
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.5); opacity:0;}
+  to { transform: scale(1); opacity:1;}
+}
+
+/* ================= COMBO POPUP ================= */
+.combo-popup {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.7);
+  background: linear-gradient(45deg, #f55e5e, #fc3939);
+  padding: 14px 28px;
+  border-radius: 40px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 0 25px #f55e5e;
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: 9999;
+}
+
+.combo-popup.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* ================= MUSIC ================= */
+.music {
+  margin-top: 25px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+/* ================= CONFETTI ================= */
+.confetti {
+  position: fixed;
+  top: -20px;
+  font-size: 18px;
+  animation: confettiFall linear forwards;
+  pointer-events: none;
+}
+
+@keyframes confettiFall {
+  to { transform: translateY(120vh) rotate(720deg); opacity:0; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= PASSWORD SCREEN ================= -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-title">💝 Valentine’s Surprise</div>
+    <div class="lock-sub">Enter the password I gave you XD 💌</div>
+    <div class="lock-countdown" id="lockCountdown">⏳ Loading Valentine’s countdown...</div>
+    <input type="password" id="passwordInput" placeholder="Password...">
+    <button onclick="checkPassword()">Unlock 💖</button>
+    <div class="lock-error" id="lockError">Wrong password 😭</div>
+  </div>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="container" id="mainContent">
+  <div class="name">Sam 😝</div>
+
+  <!-- PHOTO -->
+  <div class="photo" onclick="photoSurprise()">
+    <img src="us.png" alt="Us together 🩵😝">
+  </div>
+  <div class="photo-message" id="photoMsg">
+    This is my favorite picture because we're in it ^^ 💖
+  </div>
+
+  <div class="card">
+
+    <!-- COUNTDOWN / TIME SINCE VALENTINE -->
+    <div class="countdown" id="countdown">⏳ Loading Valentine’s countdown...</div>
+
+    <!-- TIME TOGETHER -->
+    <div class="counter" id="counter">💞 Calculating our time together...</div>
+
+    <div class="letter">
+      Dear Sam,<br><br>
+      from the moment you came into my life, everything felt warmer, brighter,
+      and more alive. you make me feel safe, loved, and understood in ways
+      i never knew were possible... like fr.<br><br>
+
+      I love how passionate you are... especially about games, music,
+      and being unapologetically yourself. Loving you is easy.. i hope that today is filled with the same joy you bring into my life.<br><br>
+
+      Your heart is fragile and sensitive just like mine, but im as careful as possible with it. Happy Valentine's Day! 💖<br>
+      - Isaa :3
+    </div>
+
+    <button onclick="unlockLove()">💘 Click for a secret</button>
+
+    <div id="secret">
+      🩵 Secret 🤍<br>
+      <strong>
+      Im urs. Sorry no refunds or exchanges. I know loving me isnt always the easiest... but trust me, im worth it ;3
+      </strong> 💖
+    </div>
+
+    <!-- SCRATCH TO REVEAL -->
+    <div class="scratch-container">
+      <div style="margin-bottom:8px;">💌 Scratch to reveal</div>
+      <div class="scratch-card" id="scratchCard">
+        <div class="scratch-text">I MIGHT touch u 😭🙏<br>
+        help<br>
+        XZRU37CYRDPJ</div>
+        <div class="scratch-overlay" id="scratchOverlay"></div>
+      </div>
+    </div>
+
+    <!-- MINI GAME -->
+    <div class="game">
+      <div class="score">💝 Hearts collected: <span id="score">0</span></div>
+      <div class="game-area" id="gameArea"></div>
+    </div>
+
+    <div class="music">
+      🎵 Your favorite songs:<br><br>
+      • <em>Somewhere I belong</em> — Linkin Park<br>
+      • <em>Faint</em> — Linkin Park<br>
+      • <em>From The Start</em> — Laufey<br>
+      • <em>The Kill</em> — Thirty Seconds To Mars<br>
+      • <em>Smells Like Teen Spirits</em> — Nirvana
+    </div>
+  </div>
+</div>
+
+<!-- ================= COMBO POPUP ================= -->
+<div class="combo-popup" id="comboPopup">💖 COMBO x10!</div>
+
+<script>
+/* ================= PASSWORD ================= */
+const correctPassword = "sam<3;v26";
+
+function checkPassword(){
+  const input = document.getElementById("passwordInput").value;
+  const error = document.getElementById("lockError");
+  const lockScreen = document.getElementById("lockScreen");
+  const mainContent = document.getElementById("mainContent");
+
+  if(input === correctPassword){
+    lockScreen.classList.add("hide");
+    setTimeout(() => mainContent.classList.add("show"), 900);
+  } else {
+    error.classList.add("show");
+    setTimeout(() => error.classList.remove("show"), 1500);
+  }
+}
+
+/* ================= COUNTDOWN → TIME SINCE VALENTINE ================= */
+const valentinesDate = new Date(new Date().getFullYear(), 1, 14, 0, 0, 0);
+
+function updateCountdown(){
+  const now = new Date();
+  const elMain = document.getElementById("countdown");
+  const elLock = document.getElementById("lockCountdown");
+  let diff = valentinesDate - now;
+
+  diff = Math.abs(diff);
+
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor(diff / (1000*60*60)) % 24;
+  const minutes = Math.floor(diff / (1000*60)) % 60;
+  const seconds = Math.floor(diff / 1000) % 60;
+
+  let text = "";
+
+  if(now < valentinesDate){
+    text = `⏳ Valentine’s Day in <strong>${days}</strong>d <strong>${hours}</strong>h <strong>${minutes}</strong>m <strong>${seconds}</strong>s 💖`;
+  } else {
+    text = `⏳ It’s been <strong>${days}</strong>d <strong>${hours}</strong>h <strong>${minutes}</strong>m <strong>${seconds}</strong>s since Valentine’s Day 2026 💖`;
+  }
+
+  elMain.innerHTML = text;
+  elLock.innerHTML = text;
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+/* ================= TIME TOGETHER ================= */
+const startDate = new Date("2023-06-16T00:00:00");
+
+function updateCounter(){
+  const now = new Date();
+  let diff = now - startDate;
+  const seconds = Math.floor(diff/1000)%60;
+  const minutes = Math.floor(diff/1000/60)%60;
+  const hours = Math.floor(diff/1000/60/60)%24;
+  const days = Math.floor(diff/1000/60/60/24);
+
+  document.getElementById("counter").innerHTML =
+    `💞 Together for <strong>${days}</strong> days, <strong>${hours}</strong> hours, <strong>${minutes}</strong> minutes, <strong>${seconds}</strong> seconds 🩵`;
+}
+setInterval(updateCounter,1000);
+updateCounter();
+
+/* ================= SECRET ================= */
+function unlockLove(){
+  document.getElementById("secret").classList.add("show");
+  burstHearts();
+  confettiHearts();
+}
+
+/* ================= PHOTO ================= */
+function photoSurprise(){
+  const msg = document.getElementById("photoMsg");
+  msg.classList.toggle("show");
+  confettiHearts();
+}
+
+/* ================= FLOATING HEARTS ================= */
+setInterval(()=>{
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "💖";
+  heart.style.left = Math.random()*100 + "vw";
+  heart.style.fontSize = Math.random()*20 + 16 + "px";
+  heart.style.animationDuration = Math.random()*3 + 4 + "s";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),7000);
+},300);
+
+/* ================= BURST HEARTS ================= */
+function burstHearts(){
+  for(let i=0;i<25;i++){
+    const heart = document.createElement("div");
+    heart.innerHTML = "🩵";
+    heart.style.position = "fixed";
+    heart.style.left = "50%";
+    heart.style.top = "50%";
+    heart.style.fontSize = Math.random()*18 + 16 + "px";
+    heart.style.transform = "translate(-50%,-50%)";
+    heart.style.transition = "all 1s ease";
+    document.body.appendChild(heart);
+    setTimeout(()=>{
+      heart.style.left = Math.random()*100 + "vw";
+      heart.style.top = Math.random()*100 + "vh";
+      heart.style.opacity = "0";
+    },50);
+    setTimeout(()=>heart.remove(),1200);
+  }
+  if(navigator.vibrate) navigator.vibrate(80);
+}
+
+/* ================= CONFETTI ================= */
+function confettiHearts(){
+  for(let i=0;i<40;i++){
+    const heart = document.createElement("div");
+    heart.className = "confetti";
+    heart.innerHTML = ["💝","🩵","💘","🤍"][Math.floor(Math.random()*4)];
+    heart.style.left = Math.random()*100 + "vw";
+    heart.style.fontSize = Math.random()*16 + 14 + "px";
+    heart.style.animationDuration = Math.random()*2 + 2 + "s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),3000);
+  }
+}
+
+function confettiFlowers(){
+  const flowers = ["🌸","🌺","🌼","🌷","💐"];
+  for(let i=0;i<50;i++){
+    const f = document.createElement("div");
+    f.className = "confetti";
+    f.innerHTML = flowers[Math.floor(Math.random()*flowers.length)];
+    f.style.left = Math.random()*100 + "vw";
+    f.style.fontSize = Math.random()*18 + 16 + "px";
+    f.style.animationDuration = Math.random()*2 + 2 + "s";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),3000);
+  }
+}
+
+/* ================= SCRATCH ================= */
+const overlay = document.getElementById("scratchOverlay");
+const scratchCard = document.getElementById("scratchCard");
+let scratched = false;
+
+scratchCard.addEventListener("pointerdown",()=>{
+  confettiFlowers();
+  burstHearts();
+
+  if(scratched) return;
+  scratched = true;
+  overlay.style.transition = "opacity 0.6s ease";
+  overlay.style.opacity = "0";
+  setTimeout(()=>overlay.style.display="none",600);
+});
+
+/* ================= MINI GAME ================= */
+let score = 0;
+const gameArea = document.getElementById("gameArea");
+const comboPopup = document.getElementById("comboPopup");
+
+function showCombo(){
+  comboPopup.textContent = `💖 COMBO x${score}!`;
+  comboPopup.classList.add("show");
+  confettiFlowers();
+  setTimeout(()=>comboPopup.classList.remove("show"), 2000);
+}
+
+function spawnHeart(){
+  const heart = document.createElement("div");
+  heart.className = "tap-heart";
+  heart.innerHTML = "💖";
+  heart.style.left = Math.random()*85 + "%";
+  heart.style.top = Math.random()*70 + "%";
+  gameArea.appendChild(heart);
+  heart.addEventListener("click",()=>{
+    score++;
+    document.getElementById("score").textContent = score;
+    heart.remove();
+    burstHearts();
+
+    if(score % 10 === 0){
+      showCombo();
+    }
+  });
+  setTimeout(()=>heart.remove(),2000);
+}
+setInterval(spawnHeart,700);
+</script>
+
+</body>
+</html>
